@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markus Dressler — Product & Design</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #FAFAF8; --bg-alt: #F2F0EC; --text: #1A1A2E; --text-secondary: #6B6B7B;
+            --accent: #2D5B8A; --accent-light: #E8EFF6; --border: #E0DDD6; --white: #FFFFFF;
+            --serif: 'Playfair Display', Georgia, serif;
+            --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        html { scroll-behavior: smooth; font-size: 16px; }
+        body { font-family: var(--sans); color: var(--text); background: var(--bg); line-height: 1.7; -webkit-font-smoothing: antialiased; }
+
+        /* NAV */
+        nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 1.25rem 2.5rem; display: flex; justify-content: space-between; align-items: center; background: rgba(250,250,248,0.92); backdrop-filter: blur(20px); border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+        nav.scrolled { border-bottom-color: var(--border); }
+        nav .logo { font-family: var(--sans); font-weight: 600; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--text); }
+        nav ul { list-style: none; display: flex; gap: 2rem; }
+        nav a { text-decoration: none; color: var(--text-secondary); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; transition: color 0.3s; }
+        nav a:hover { color: var(--text); }
+
+        /* HERO */
+        .hero { min-height: 100vh; display: flex; align-items: center; padding: 6rem 2.5rem; max-width: 1200px; margin: 0 auto; gap: 4rem; }
+        .hero-content { flex: 1; }
+        .hero-photo { flex: 0 0 280px; }
+        .hero-photo img { width: 280px; height: 280px; border-radius: 50%; object-fit: cover; object-position: center 20%; filter: grayscale(20%); }
+        .hero-label { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards; }
+        .hero h1 { font-family: var(--serif); font-size: clamp(2.5rem, 5vw, 4.2rem); font-weight: 400; line-height: 1.15; opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards; }
+        .hero h1 em { font-style: italic; color: var(--accent); }
+        .hero-sub { margin-top: 1.5rem; font-size: 1.05rem; line-height: 1.8; color: var(--text-secondary); max-width: 540px; opacity: 0; animation: fadeUp 0.8s ease 0.6s forwards; }
+        .hero-cta { margin-top: 2.5rem; display: flex; gap: 1rem; opacity: 0; animation: fadeUp 0.8s ease 0.8s forwards; }
+        .hero-cta a { display: inline-block; padding: 0.85rem 2rem; font-size: 0.8rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; border-radius: 2px; transition: all 0.3s; }
+        .btn-primary { background: var(--text); color: var(--white); }
+        .btn-primary:hover { background: var(--accent); }
+        .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+        .btn-secondary:hover { border-color: var(--text); }
+
+        /* PHILOSOPHY */
+        .philosophy { background: var(--text); color: var(--white); padding: 5rem 2.5rem; text-align: center; }
+        .philosophy blockquote { font-family: var(--serif); font-size: clamp(1.2rem, 2.5vw, 1.6rem); font-style: italic; max-width: 720px; margin: 0 auto; line-height: 1.7; color: rgba(255,255,255,0.85); }
+        .philosophy cite { display: block; margin-top: 1.5rem; font-family: var(--sans); font-style: normal; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+
+        /* SECTIONS */
+        section { padding: 6rem 2.5rem; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .section-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
+        .section-title { font-family: var(--serif); font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 400; line-height: 1.25; margin-bottom: 2rem; }
+
+        /* ABOUT */
+        .about { background: var(--white); }
+        .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+        .about-text p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 1.25rem; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; padding-top: 1rem; }
+        .stat { border-left: 2px solid var(--accent-light); padding-left: 1.25rem; }
+        .stat-number { font-family: var(--serif); font-size: 2rem; font-weight: 400; color: var(--text); line-height: 1; }
+        .stat-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.35rem; line-height: 1.4; }
+
+        /* CAREER */
+        .career { background: var(--bg); }
+        .timeline { margin-top: 3rem; }
+        .timeline-item { display: grid; grid-template-columns: 200px 1fr; gap: 3rem; padding: 2rem 0; border-top: 1px solid var(--border); }
+        .timeline-company { font-weight: 600; font-size: 0.95rem; }
+        .timeline-dates { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.25rem; }
+        .timeline-team { font-size: 0.75rem; color: var(--accent); margin-top: 0.35rem; font-weight: 500; }
+        .timeline-role { font-family: var(--serif); font-size: 1.2rem; font-weight: 400; margin-bottom: 0.75rem; }
+        .timeline-desc { color: var(--text-secondary); font-size: 0.9rem; max-width: 600px; }
+        .timeline-highlight { display: inline-block; margin-top: 0.75rem; padding: 0.3rem 0.75rem; background: var(--accent-light); border-radius: 2px; font-size: 0.78rem; font-weight: 500; color: var(--accent); }
+
+        /* PORTFOLIO */
+        .portfolio { background: var(--white); }
+        .portfolio-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 3rem; }
+        .portfolio-card { position: relative; overflow: hidden; border-radius: 6px; background: var(--bg-alt); cursor: pointer; transition: transform 0.4s ease, box-shadow 0.4s ease; }
+        .portfolio-card:hover { transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.1); }
+        .portfolio-card.featured { grid-column: 1 / -1; }
+        .portfolio-card img { width: 100%; display: block; aspect-ratio: 16/9; object-fit: cover; object-position: center; }
+        .portfolio-card.featured img { aspect-ratio: 21/9; }
+        .card-info { padding: 1.5rem; }
+        .card-label { font-size: 0.7rem; font-weight: 500; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.25rem; }
+        .card-title { font-family: var(--serif); font-size: 1.15rem; font-weight: 400; }
+        .card-desc { font-size: 0.85rem; color: var(--text-secondary); margin-top: 0.35rem; }
+
+        /* LEADERSHIP */
+        .leadership { background: var(--bg); }
+        .leadership-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin-top: 3rem; }
+        .leadership-card { background: var(--white); border-radius: 6px; padding: 2rem; }
+        .leadership-card h3 { font-family: var(--serif); font-size: 1.1rem; font-weight: 400; margin-bottom: 0.75rem; }
+        .leadership-card p { font-size: 0.9rem; color: var(--text-secondary); }
+
+        /* BEYOND */
+        .beyond { background: var(--white); }
+        .beyond-content { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+        .beyond-text p { color: var(--text-secondary); font-size: 1rem; margin-bottom: 1.25rem; }
+        .beyond-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+        .beyond-tag { padding: 0.4rem 1rem; border: 1px solid var(--border); border-radius: 2px; font-size: 0.78rem; color: var(--text-secondary); }
+        .beyond-photos { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+        .beyond-photos img { width: 100%; border-radius: 6px; object-fit: cover; }
+
+        /* CONTACT */
+        .contact { background: var(--text); color: var(--white); text-align: center; }
+        .contact .section-label { color: rgba(255,255,255,0.4); }
+        .contact .section-title { color: var(--white); }
+        .contact p { color: rgba(255,255,255,0.6); max-width: 480px; margin: 0 auto 2.5rem; }
+        .contact-links { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; }
+        .contact-link { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.85rem; padding-bottom: 2px; border-bottom: 1px solid rgba(255,255,255,0.2); transition: all 0.3s; }
+        .contact-link:hover { color: var(--white); border-bottom-color: var(--white); }
+
+        footer { background: var(--text); color: rgba(255,255,255,0.3); text-align: center; padding: 2rem; font-size: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); }
+
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+        .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            nav { padding: 1rem 1.5rem; }
+            nav ul { display: none; }
+            section { padding: 4rem 1.5rem; }
+            .hero { flex-direction: column-reverse; padding: 7rem 1.5rem 3rem; gap: 2rem; text-align: center; }
+            .hero-photo { flex: none; }
+            .hero-photo img { width: 180px; height: 180px; }
+            .hero-sub { margin-left: auto; margin-right: auto; }
+            .hero-cta { justify-content: center; }
+            .about-grid, .beyond-content { grid-template-columns: 1fr; gap: 2.5rem; }
+            .timeline-item { grid-template-columns: 1fr; gap: 0.5rem; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .portfolio-card.featured img { aspect-ratio: 16/9; }
+            .leadership-grid { grid-template-columns: 1fr; }
+            .philosophy { padding: 3.5rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav id="nav">
+    <div class="logo">Markus Dressler</div>
+    <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#career">Career</a></li>
+        <li><a href="#work">Work</a></li>
+        <li><a href="#beyond">Beyond</a></li>
+        <li><a href="#contact">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-label">Product & Design Leadership</div>
+        <h1>Designing products<br>that become <em>revenue&nbsp;engines</em></h1>
+        <p class="hero-sub">20+ years turning user insight into business outcomes at Shopify, McAfee, Lightspeed, Snappy, and Emburse. I build design organizations, ship products, and grow companies.</p>
+        <div class="hero-cta">
+            <a href="#work" class="btn-primary">View Work</a>
+            <a href="#contact" class="btn-secondary">Get in Touch</a>
+        </div>
+    </div>
+    <div class="hero-photo">
+        <img src="images/bw headshot.png" alt="Markus Dressler" style="object-position: center 15%;">
+    </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+    <div class="container">
+        <blockquote>"Constraints are just cleverly placed opportunities for epic creativity. Turning those limitations into simple, delightful, and even smile-inducing user experiences that move the business needle. I'm all about taking complexity and coming out the other side with something that feels intuitive and joyful."</blockquote>
+        <cite>My design philosophy</cite>
+    </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+    <div class="container reveal">
+        <div class="about-grid">
+            <div class="about-text">
+                <div class="section-label">About</div>
+                <h2 class="section-title">Design executive with agency roots and SaaS ambition</h2>
+                <p>I started my career shaping brands at agencies like Grey Group, McCann, and TBWA, working with clients from Nissan to Air Canada. That foundation in storytelling and craft followed me into the product world, where I've spent the last decade leading design and product teams at scale.</p>
+                <p>At Shopify, I redesigned the checkout that processes $17B+ in annual payments and helped take the company to IPO. At McAfee, I led product experience for a $1.4B consumer business across 5 time zones and 4 countries. At Lightspeed, I shipped a product suite that grew POS revenue by 43%. Today, I'm reimagining travel and expense at Emburse with AI-first design.</p>
+                <p>I build teams that ship. I care about the craft, the culture, and the commercial outcome in equal measure.</p>
+            </div>
+            <div class="stats-grid">
+                <div class="stat">
+                    <div class="stat-number">$1.4B</div>
+                    <div class="stat-label">Annual revenue influenced<br>at McAfee</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">43%</div>
+                    <div class="stat-label">Revenue growth<br>at Lightspeed POS</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">$17B+</div>
+                    <div class="stat-label">Payments through<br>Shopify checkout</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">$22M</div>
+                    <div class="stat-label">Venture funding driven<br>by product strategy</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CAREER -->
+<section class="career" id="career">
+    <div class="container reveal">
+        <div class="section-label">Career</div>
+        <h2 class="section-title">A path from craft to leadership</h2>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-meta">
+                    <div class="timeline-company">Emburse</div>
+                    <div class="timeline-dates">Sep 2024 &mdash; Present</div>
+                    <div class="timeline-team">5-6 designers</div>
+                </div>
+                <div>
+                    <div class="timeline-role">Head of Design</div>
+                    <div class="timeline-desc">Spearheading the "Re-imagine T&E" initiative with AI-driven, agentic capabilities. Leading brand refresh, scaling the Embark design system, and unifying a multi-product ecosystem into a cohesive UX strategy.</div>
+                    <span class="timeline-highlight">AI-first T&E redesign</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-meta">
+                    <div class="timeline-company">Snappy</div>
+                    <div class="timeline-dates">May 2022 &mdash; Aug 2024</div>
+                    <div class="timeline-team">4&rarr;8 designers, 1 content, 1 UXR &middot; 5 countries</div>
+                </div>
+                <div>
+                    <div class="timeline-role">Head of Product & Design</div>
+                    <div class="timeline-desc">Grew B2B SaaS revenue by 34.5%. Scaled global UX team across 4 time zones. Launched AI-powered marketplace search and built design systems for consumer and enterprise tiers.</div>
+                    <span class="timeline-highlight">+34.5% platform revenue</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-meta">
+                    <div class="timeline-company">Lightspeed Commerce</div>
+                    <div class="timeline-dates">Jun 2020 &mdash; May 2022</div>
+                    <div class="timeline-team">19 designers, 5 content, 2 UXR &middot; 7 countries</div>
+                </div>
+                <div>
+                    <div class="timeline-role">Director of Product Design</div>
+                    <div class="timeline-desc">Shipped retail product suite that increased POS revenue by 43%. Led design through multiple M&A integrations. Launched Lightspeed Capital, Analytics, and Google Inventory Ads.</div>
+                    <span class="timeline-highlight">+43% POS revenue</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-meta">
+                    <div class="timeline-company">McAfee</div>
+                    <div class="timeline-dates">May 2019 &mdash; Jun 2020</div>
+                    <div class="timeline-team">23 designers, 6 content, 4 UXR, 3 Dir. of PM &middot; 4 countries</div>
+                </div>
+                <div>
+                    <div class="timeline-role">Global VP of Product Experience</div>
+                    <div class="timeline-desc">Led UX and product management for the $1.4B consumer business. Transformed 1,200+ employees into design-thinking culture. Took McAfee Personal Protection from CES prototype to market launch.</div>
+                    <span class="timeline-highlight">$1.4B annual revenue</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-meta">
+                    <div class="timeline-company">Pomelo Health</div>
+                    <div class="timeline-dates">Mar 2017 &mdash; Mar 2019</div>
+                    <div class="timeline-team">1&rarr;5 designers, 1 content</div>
+                </div>
+                <div>
+                    <div class="timeline-role">VP, Product Management & Design</div>
+                    <div class="timeline-desc">Product strategy that secured $2M Series A and $20M Series B &mdash; a 10x funding increase. Built PM and design teams from scratch for healthcare SaaS platform.</div>
+                    <span class="timeline-highlight">10x funding growth</span>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-meta">
+                    <div class="timeline-company">Shopify</div>
+                    <div class="timeline-dates">Mar 2015 &mdash; Mar 2017</div>
+                    <div class="timeline-team">3&rarr;12 designers, 4 content, 2 UXR</div>
+                </div>
+                <div>
+                    <div class="timeline-role">Director of Design</div>
+                    <div class="timeline-desc">Redesigned the eCom checkout processing $17B+/year pre-IPO. Built Facebook Buy Button with Meta. Scaled Montreal office from 25 to 180+ employees in 15 months.</div>
+                    <span class="timeline-highlight">Pre-IPO checkout redesign</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="work">
+    <div class="container reveal">
+        <div class="section-label">Selected Work</div>
+        <h2 class="section-title">Products I've shaped</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-card featured">
+                <img src="images/snappy-platform.jpg" alt="Snappy B2B Gifting Platform">
+                <div class="card-info">
+                    <div class="card-label">Snappy</div>
+                    <div class="card-title">B2B Gifting Platform &mdash; End-to-End Redesign</div>
+                    <div class="card-desc">Redesigned the complete gifting experience across consumer and enterprise tiers. AI-powered curation, 34.5% revenue growth.</div>
+                </div>
+            </div>
+            <div class="portfolio-card">
+                <img src="images/lightspeed-pos.jpg" alt="Lightspeed POS and Hardware">
+                <div class="card-info">
+                    <div class="card-label">Lightspeed</div>
+                    <div class="card-title">Retail POS & Hardware</div>
+                    <div class="card-desc">Unified POS suite including hardware design. 43% revenue increase.</div>
+                </div>
+            </div>
+            <div class="portfolio-card">
+                <img src="images/lightspeed-hardware.jpg" alt="Lightspeed Hardware Design">
+                <div class="card-info">
+                    <div class="card-label">Lightspeed</div>
+                    <div class="card-title">Hardware Design for Point of Sale</div>
+                    <div class="card-desc">From sketches to production. Industrial design for the retail countertop.</div>
+                </div>
+            </div>
+            <div class="portfolio-card">
+                <img src="images/mcafee-personal.jpg" alt="McAfee Personal Protection Suite">
+                <div class="card-info">
+                    <div class="card-label">McAfee</div>
+                    <div class="card-title">Personal Protection Suite</div>
+                    <div class="card-desc">Device-agnostic cybersecurity. From CES prototype to global market launch.</div>
+                </div>
+            </div>
+            <div class="portfolio-card">
+                <img src="images/mcafee-gamer.jpg" alt="McAfee Gamer Security">
+                <div class="card-info">
+                    <div class="card-label">McAfee</div>
+                    <div class="card-title">Gamer Security</div>
+                    <div class="card-desc">Performance-optimized security for gamers. Product design, packaging, and GTM.</div>
+                </div>
+            </div>
+            <div class="portfolio-card">
+                <img src="images/mcafee-mobile-vpn.jpg" alt="McAfee Mobile VPN Experience">
+                <div class="card-info">
+                    <div class="card-label">McAfee</div>
+                    <div class="card-title">Mobile VPN &amp; Safe Browsing</div>
+                    <div class="card-desc">Contextual mobile experience flows for VPN activation and safe browsing zones.</div>
+                </div>
+            </div>
+            <div class="portfolio-card">
+                <img src="images/lightspeed-ecom.jpg" alt="Lightspeed eCom and Omnichannel">
+                <div class="card-info">
+                    <div class="card-label">Lightspeed</div>
+                    <div class="card-title">eCom &amp; Omnichannel</div>
+                    <div class="card-desc">Responsive retail platform across desktop, tablet, and mobile.</div>
+                </div>
+            </div>
+            <div class="portfolio-card">
+                <img src="images/lightspeed-analytics.jpg" alt="Lightspeed Merchant Analytics">
+                <div class="card-info">
+                    <div class="card-label">Lightspeed</div>
+                    <div class="card-title">Merchant Analytics</div>
+                    <div class="card-desc">Dashboard design for sales insights, inventory, and customer analytics.</div>
+                </div>
+            </div>
+            <div class="portfolio-card">
+                <img src="images/chronometriq-dashboard.jpg" alt="Chronometriq Patient Dashboard">
+                <div class="card-info">
+                    <div class="card-label">Chronometriq (Pomelo Health)</div>
+                    <div class="card-title">Patient Dashboard &amp; Smart Wait</div>
+                    <div class="card-desc">Healthcare SaaS. Patient-facing dashboard and smartwatch integration.</div>
+                </div>
+            </div>
+            <div class="portfolio-card">
+                <img src="images/phyla-app.jpg" alt="Phyla Gut Health App">
+                <div class="card-info">
+                    <div class="card-label">Phyla Health</div>
+                    <div class="card-title">Gut Health App</div>
+                    <div class="card-desc">AI-based diet and nutrition plans. C2 Commerce + Creativity Winner 2020.</div>
+                </div>
+            </div>
+            <div class="portfolio-card featured">
+                <img src="images/mcafee-playbook.jpg" alt="Customer Obsession Playbook">
+                <div class="card-info">
+                    <div class="card-label">McAfee</div>
+                    <div class="card-title">Customer Obsession Playbook</div>
+                    <div class="card-desc">Design-thinking framework for cross-functional teams. Deployed across 1,200+ employees globally.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- LEADERSHIP -->
+<section class="leadership">
+    <div class="container reveal">
+        <div class="section-label">Leadership</div>
+        <h2 class="section-title">What I believe in</h2>
+        <div class="leadership-grid">
+            <div class="leadership-card">
+                <h3>Empowering Autonomy</h3>
+                <p>Trusting the UX team to take ownership of their work, while providing the support they need to thrive and go fast.</p>
+            </div>
+            <div class="leadership-card">
+                <h3>Cross-Team Collaboration</h3>
+                <p>Building bridges between design, product, and engineering by default. One brain with three different perspectives to define the problem discovery and solution space.</p>
+            </div>
+            <div class="leadership-card">
+                <h3>Cultivating a Learning Culture</h3>
+                <p>Encouraging continuous skill growth, curiosity, and experimentation &mdash; so we're always leveling up our UX game.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- BEYOND -->
+<section class="beyond" id="beyond">
+    <div class="container reveal">
+        <div class="beyond-content">
+            <div class="beyond-text">
+                <div class="section-label">Beyond the Screen</div>
+                <h2 class="section-title">Things with soul and emotion in their movement</h2>
+                <p>I believe great design doesn't stop at pixels. It lives in the weight of a well-made door handle, the timing of a perfectly tuned engine, the moment a guest walks into a space and feels immediately at home.</p>
+                <p>I'm an Airbnb host who obsesses over the guest experience the same way I obsess over a user journey. I host a local farmers market on our farm in the mountains. In my free time, I restore cars, build furniture, design engines, and tinker with electronics.</p>
+                <p>Whether it's a SaaS product or a handmade table, I care about how things work, how they feel, and whether they were made with intention.</p>
+                <div class="beyond-tags">
+                    <span class="beyond-tag">Airbnb Host</span>
+                    <span class="beyond-tag">Farmers Market</span>
+                    <span class="beyond-tag">Car Restoration</span>
+                    <span class="beyond-tag">Furniture Making</span>
+                    <span class="beyond-tag">Engine Design</span>
+                    <span class="beyond-tag">Electronics</span>
+                </div>
+            </div>
+            <div class="beyond-photos">
+                <img src="images/farm-market.jpg" alt="Mountain farm and farmers market" style="border-radius: 6px;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+    <div class="container reveal">
+        <div class="section-label">Contact</div>
+        <h2 class="section-title">Let's build something together</h2>
+        <p>Open to design leadership opportunities, advisory roles, and conversations about product, craft, and everything in between.</p>
+        <div class="contact-links">
+            <a href="mailto:dressler.markus@gmail.com" class="contact-link">dressler.markus@gmail.com</a>
+            <a href="tel:+15146607821" class="contact-link">+1-514-660-7821</a>
+            <a href="https://www.linkedin.com/in/markus-dressler-b0b6084/" class="contact-link" target="_blank">LinkedIn</a>
+        </div>
+    </div>
+</section>
+
+<footer>&copy; 2026 Markus Dressler. Designed with intention.</footer>
+
+<!-- EDIT MODE TOOLBAR -->
+<div id="edit-toolbar" style="display:none; position:fixed; bottom:0; left:0; right:0; z-index:9999; background:#1A1A2E; color:#fff; padding:0.75rem 2rem; font-family:var(--sans); font-size:0.85rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; box-shadow:0 -4px 20px rgba(0,0,0,0.2);">
+    <div style="display:flex; align-items:center; gap:1rem;">
+        <span style="background:#2D5B8A; padding:0.3rem 0.7rem; border-radius:3px; font-size:0.7rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase;">Edit Mode</span>
+        <span style="color:rgba(255,255,255,0.6);">Click any text to edit. Click any image to replace it.</span>
+    </div>
+    <div style="display:flex; gap:0.75rem;">
+        <button onclick="exportChanges()" style="background:#2D5B8A; color:#fff; border:none; padding:0.5rem 1.25rem; border-radius:3px; cursor:pointer; font-size:0.8rem; font-weight:500;">Save as HTML</button>
+        <button onclick="toggleEditMode()" style="background:transparent; color:rgba(255,255,255,0.6); border:1px solid rgba(255,255,255,0.2); padding:0.5rem 1.25rem; border-radius:3px; cursor:pointer; font-size:0.8rem;">Exit Edit Mode</button>
+    </div>
+</div>
+
+<!-- EDIT MODE TOGGLE (floating button when not in edit mode) -->
+<button id="edit-toggle" onclick="toggleEditMode()" style="position:fixed; bottom:2rem; right:2rem; z-index:9998; background:#1A1A2E; color:#fff; border:none; width:56px; height:56px; border-radius:50%; cursor:pointer; font-size:1.2rem; box-shadow:0 4px 20px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; transition:all 0.3s;" title="Toggle Edit Mode">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+</button>
+
+<!-- IMAGE REPLACE MODAL -->
+<div id="img-modal" style="display:none; position:fixed; inset:0; z-index:10000; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center;">
+    <div style="background:#fff; border-radius:8px; padding:2.5rem; max-width:480px; width:90%; text-align:center; font-family:var(--sans);">
+        <h3 style="margin-bottom:0.5rem; font-size:1.1rem;">Replace Image</h3>
+        <p style="color:#6B6B7B; font-size:0.9rem; margin-bottom:1.5rem;">Choose a new image file. It will be cropped to fit the same area.</p>
+        <div id="crop-preview" style="margin-bottom:1.5rem; max-height:200px; overflow:hidden; border-radius:4px; background:#F2F0EC; display:none;">
+            <img id="crop-img" style="width:100%; display:block;">
+        </div>
+        <div style="margin-bottom:1rem;">
+            <label style="display:inline-block; padding:0.6rem 1.5rem; background:#2D5B8A; color:#fff; border-radius:3px; cursor:pointer; font-size:0.85rem; font-weight:500;">
+                Choose File
+                <input type="file" id="img-input" accept="image/*" style="display:none;" onchange="previewImage(this)">
+            </label>
+        </div>
+        <div style="display:flex; gap:0.75rem; justify-content:center;">
+            <button id="img-apply" onclick="applyImage()" style="display:none; background:#1A1A2E; color:#fff; border:none; padding:0.5rem 1.5rem; border-radius:3px; cursor:pointer; font-size:0.85rem;">Apply</button>
+            <button onclick="closeImgModal()" style="background:transparent; color:#6B6B7B; border:1px solid #E0DDD6; padding:0.5rem 1.5rem; border-radius:3px; cursor:pointer; font-size:0.85rem;">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Nav scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 40));
+
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ===== EDIT MODE =====
+    let editMode = false;
+    let targetImg = null;
+
+    const editableSelectors = 'h1, h2, h3, p, .hero-label, .hero-sub, .card-label, .card-title, .card-desc, .section-label, .section-title, .timeline-company, .timeline-dates, .timeline-team, .timeline-role, .timeline-desc, .timeline-highlight, .stat-number, .stat-label, .contact-link, .beyond-tag, blockquote, cite, .logo, footer, .btn-primary, .btn-secondary';
+
+    function toggleEditMode() {
+        editMode = !editMode;
+        const toolbar = document.getElementById('edit-toolbar');
+        const toggle = document.getElementById('edit-toggle');
+
+        if (editMode) {
+            toolbar.style.display = 'flex';
+            toggle.style.display = 'none';
+            document.body.style.paddingBottom = '60px';
+
+            // Make text editable
+            document.querySelectorAll(editableSelectors).forEach(el => {
+                el.contentEditable = 'true';
+                el.style.outline = 'none';
+                el.addEventListener('focus', handleEditFocus);
+                el.addEventListener('blur', handleEditBlur);
+            });
+
+            // Make images clickable
+            document.querySelectorAll('.portfolio-card img, .hero-photo img, .beyond-photos img').forEach(img => {
+                img.style.cursor = 'pointer';
+                img.addEventListener('click', handleImgClick);
+                img.title = 'Click to replace this image';
+            });
+        } else {
+            toolbar.style.display = 'none';
+            toggle.style.display = 'flex';
+            document.body.style.paddingBottom = '0';
+
+            document.querySelectorAll('[contenteditable]').forEach(el => {
+                el.contentEditable = 'false';
+                el.removeEventListener('focus', handleEditFocus);
+                el.removeEventListener('blur', handleEditBlur);
+            });
+
+            document.querySelectorAll('.portfolio-card img, .hero-photo img, .beyond-photos img').forEach(img => {
+                img.style.cursor = '';
+                img.removeEventListener('click', handleImgClick);
+                img.title = '';
+            });
+        }
+    }
+
+    function handleEditFocus(e) {
+        e.target.style.outline = '2px solid #2D5B8A';
+        e.target.style.outlineOffset = '4px';
+        e.target.style.borderRadius = '2px';
+    }
+
+    function handleEditBlur(e) {
+        e.target.style.outline = 'none';
+        e.target.style.outlineOffset = '';
+    }
+
+    function handleImgClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        targetImg = e.target;
+        const modal = document.getElementById('img-modal');
+        modal.style.display = 'flex';
+        document.getElementById('crop-preview').style.display = 'none';
+        document.getElementById('img-apply').style.display = 'none';
+        document.getElementById('img-input').value = '';
+    }
+
+    function previewImage(input) {
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('crop-img').src = e.target.result;
+                document.getElementById('crop-preview').style.display = 'block';
+                document.getElementById('img-apply').style.display = 'inline-block';
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    function applyImage() {
+        const newSrc = document.getElementById('crop-img').src;
+        if (targetImg && newSrc) {
+            targetImg.src = newSrc;
+        }
+        closeImgModal();
+    }
+
+    function closeImgModal() {
+        document.getElementById('img-modal').style.display = 'none';
+        targetImg = null;
+    }
+
+    // Close modal on background click
+    document.getElementById('img-modal').addEventListener('click', function(e) {
+        if (e.target === this) closeImgModal();
+    });
+
+    function exportChanges() {
+        // Temporarily remove edit UI elements
+        const toolbar = document.getElementById('edit-toolbar');
+        const toggle = document.getElementById('edit-toggle');
+        const modal = document.getElementById('img-modal');
+        const tDisplay = toolbar.style.display;
+        toolbar.style.display = 'none';
+        toggle.style.display = 'none';
+        modal.style.display = 'none';
+        document.body.style.paddingBottom = '0';
+
+        // Remove contenteditable attributes
+        document.querySelectorAll('[contenteditable="true"]').forEach(el => {
+            el.removeAttribute('contenteditable');
+        });
+
+        const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+        // Restore
+        toolbar.style.display = tDisplay;
+
+        const blob = new Blob([html], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'index.html';
+        a.click();
+        URL.revokeObjectURL(url);
+
+        // Restore contenteditable
+        document.querySelectorAll(editableSelectors).forEach(el => {
+            el.contentEditable = 'true';
+        });
+    }
+</script>
+
+</body>
+</html>
